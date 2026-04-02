@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="navbar" style="display: none;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-graduation-cap"></i> Student Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="userDisplay"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-graduation-cap fa-4x text-primary"></i>
+                            <h3 class="mt-3">Student Portal</h3>
+                            <p class="text-muted">Management System</p>
+                        </div>
+
+                        <ul class="nav nav-tabs mb-3" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#loginTab">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#registerTab">Register</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <!-- Login Tab -->
+                            <div id="loginTab" class="tab-pane fade show active">
+                                <form id="loginForm" onsubmit="handleLogin(event)">
+                                    <div class="mb-3">
+                                        <label class="form-label">Username</label>
+                                        <input type="text" class="form-control" name="username"
+                                            placeholder="Enter your username" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Password</label>
+                                        <input type="password" class="form-control" name="password"
+                                            placeholder="••••••••" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 py-2 mt-2">
+                                        <i class="fas fa-sign-in-alt me-2"></i> Sign In
+                                    </button>
+                                </form>
+                                <div class="demo-box mt-4">
+                                    <p class="small fw-bold text-muted mb-2"><i class="fas fa-info-circle me-1"></i>
+                                        Demo Accounts</p>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <div class="small p-2 bg-white rounded border">
+                                                <strong>Admin:</strong> admin/admin123
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="small p-2 bg-white rounded border">
+                                                <strong>Faculty:</strong> faculty1/faculty123
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Register Tab -->
+                            <div id="registerTab" class="tab-pane fade">
+                                <form id="registerForm" onsubmit="handleRegister(event)">
+                                    <div class="mb-3">
+                                        <label class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" name="full_name" placeholder="John Doe"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Username</label>
+                                        <input type="text" class="form-control" name="username" placeholder="johndoe"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="email"
+                                            placeholder="john@example.com" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Password</label>
+                                        <input type="password" class="form-control" name="password"
+                                            placeholder="••••••••" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Role</label>
+                                        <select class="form-select" name="role" required
+                                            onchange="toggleRoleFields(this.value)">
+                                            <option value="">Select Role</option>
+                                            <option value="student">Student</option>
+                                            <option value="faculty">Faculty</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </div>
+                                    <div id="studentFields" style="display: none;">
+                                        <div class="mb-3">
+                                            <label class="form-label">Department</label>
+                                            <input type="text" class="form-control" name="department"
+                                                placeholder="Computer Science">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Year</label>
+                                            <input type="number" class="form-control" name="year" min="1" max="4" value="1">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Semester</label>
+                                            <select class="form-select" name="semester">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div id="facultyFields" style="display: none;">
+                                        <div class="mb-3">
+                                            <label class="form-label">Department</label>
+                                            <input type="text" class="form-control" name="department"
+                                                placeholder="Mathematics">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Designation</label>
+                                            <input type="text" class="form-control" name="designation"
+                                                placeholder="Professor">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100 py-2">
+                                        <i class="fas fa-user-plus me-2"></i> Create Account
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Layout Wrapper -->
+    <div id="dashboardWrapper" class="dashboard-wrapper" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-top">
+                <div class="brand">
+                    <div class="brand-logo">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <span>Student Portal</span>
+                </div>
+                <button class="sidebar-toggle btn-none">
+                      <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li>
+                        <a href="#" class="nav-item active" onclick="loadDashboardSection('dashboard')">
+                            <i class="fas fa-columns"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li id="navItemStudents">
+                        <a href="#" class="nav-item" onclick="loadDashboardSection('students')">
+                            <i class="fas fa-users"></i>
+                            <span>Students</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item" onclick="loadDashboardSection('courses')">
+                            <i class="fas fa-book-reader"></i>
+                            <span>Courses</span>
+                        </a>
+                    </li>
+                    <li id="adminOnlyFaculty">
+                        <a href="#" class="nav-item" onclick="loadDashboardSection('faculty')">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>Faculty</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item" onclick="loadDashboardSection('attendance')">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Attendance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item" onclick="loadDashboardSection('assignments')">
+                            <i class="fas fa-file-signature"></i>
+                            <span>Assignments</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item" onclick="loadDashboardSection('results')">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Results</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item" onclick="loadDashboardSection('notices')">
+                            <i class="fas fa-bell"></i>
+                            <span>Notices</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item" onclick="loadDashboardSection('profile')">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="avatarInitials">AD</div>
+                    <div class="user-text">
+                        <div class="user-name" id="sidebarUserName">Dr. Admin</div>
+                        <div class="user-role" id="sidebarUserRole">admin</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="dashboard-main">
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+            <!-- Top Header -->
+            <header class="main-header">
+                <button class="mobile-toggle btn-none d-lg-none" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-bar d-none d-sm-block">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search tasks, students...">
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn notifications-btn border-0 bg-transparent position-relative" type="button"
+                        id="notificationBtn" onclick="handleNotificationClick()">
+                        <i class="far fa-bell" style="font-size: 1.25rem; color: #64748b;"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            id="notificationBadge" style="display:none; font-size: 0.65rem; border: 2px solid white;">
+                            0
+                        </span>
+                    </button>
+                    <div class="user-profile">
+                        <span id="headerUserName" class="d-none d-md-inline">Admin</span>
+                        <div class="profile-avatar" id="headerAvatar">DA</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Container -->
+            <div id="dashboardContent" class="content-container p-4 p-md-5">
+                <!-- Content injected here by JS -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 2000">
+        <div id="toastNotification" class="toast" role="alert">
+            <div class="toast-header">
+                <strong class="me-auto">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toastBody"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
