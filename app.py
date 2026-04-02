@@ -49,16 +49,29 @@ def create_app():
     # Create upload folder if it doesn't exist
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     
+    # Check if database file exists, create tables if not
+    # On Vercel, we might need to handle the read-only file system
+    # but for common deployments, we'll try to create tables in the current folder or temp
+    with app.app_context():
+        try:
+            db.create_all()
+            print("Database checked/created successfully!")
+        except Exception as e:
+            print(f"Database creation error (expected on some read-only hosts): {e}")
+
     # Serve frontend
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    frontend_dir = os.path.join(basedir, 'frontend')
+
     @app.route('/')
     def index():
-        return send_from_directory('frontend', 'index.html')
+        return send_from_directory(frontend_dir, 'index.html')
     
     @app.route('/<path:path>')
     def serve_static(path):
-        if os.path.exists(os.path.join('frontend', path)):
-            return send_from_directory('frontend', path)
-        return send_from_directory('frontend', 'index.html')
+        if os.path.exists(os.path.join(frontend_dir, path)):
+            return send_from_directory(frontend_dir, path)
+        return send_from_directory(frontend_dir, 'index.html')
     
     # Error handlers
     @app.errorhandler(404)
@@ -74,11 +87,6 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    # Create tables
-    with app.app_context():
-        db.create_all()
-        print("Database tables created successfully!")
-    
     print("Student Portal Management System is running...")
     print("Open http://localhost:5000 in your browser")
     app.run(debug=True, host='0.0.0.0', port=5000)
